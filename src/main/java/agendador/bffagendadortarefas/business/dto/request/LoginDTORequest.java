@@ -1,4 +1,4 @@
-package agendador.bffagendadortarefas.business.dto;
+package agendador.bffagendadortarefas.business.dto.request;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginDTO {
+public class LoginDTORequest {
     private String email;
     private String senha;
 }

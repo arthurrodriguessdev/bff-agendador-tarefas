@@ -1,10 +1,8 @@
 package agendador.bffagendadortarefas.controller;
 
 import agendador.bffagendadortarefas.business.UsuarioService;
-import agendador.bffagendadortarefas.business.dto.EnderecoDTO;
-import agendador.bffagendadortarefas.business.dto.LoginDTO;
-import agendador.bffagendadortarefas.business.dto.TelefoneDTO;
-import agendador.bffagendadortarefas.business.dto.UsuarioDTO;
+import agendador.bffagendadortarefas.business.dto.request.*;
+import agendador.bffagendadortarefas.business.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +24,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "400", description = "Usuário já cadastrado")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     @PostMapping
-    public ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody UsuarioDTO usuarioDto){
+    public ResponseEntity<UsuarioDTOResponse> salvarUsuario(@RequestBody UsuarioDTORequest usuarioDto){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(usuarioService.salvarUsuario(usuarioDto));
     }
@@ -36,10 +34,10 @@ public class UsuarioController {
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> buscarUsuario(@Parameter(description = "ID do usuário", required = true, example = "1")
+    public ResponseEntity<UsuarioDTOResponse> buscarUsuario(@Parameter(description = "ID do usuário", required = true, example = "1")
                                                         @PathVariable Long id,
-                                                    @Parameter(description = "Token de acesso", required = true, example = "Bearer H83798402803...")
-                                                        @RequestHeader("Authorization") String token){
+                                                            @Parameter(description = "Token de acesso", required = false, example = "Bearer H83798402803...")
+                                                        @RequestHeader(name= "Authorization", required = false) String token){
         return ResponseEntity.ok(usuarioService.buscarUsuario(id, token));
     }
 
@@ -48,8 +46,8 @@ public class UsuarioController {
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @GetMapping
-    public ResponseEntity<UsuarioDTO> buscarUsuarioPorEmail(@RequestParam("email") String email,
-                                                            @RequestHeader("Authorization") String token){
+    public ResponseEntity<UsuarioDTOResponse> buscarUsuarioPorEmail(@RequestParam("email") String email,
+                                                                    @RequestHeader(name= "Authorization", required = false) String token){
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email, token));
     }
 
@@ -60,7 +58,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Long id,
-                                               @RequestHeader("Authorization") String token){
+                                               @RequestHeader(name= "Authorization", required = false) String token){
         usuarioService.deletarUsuario(id, token);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -71,9 +69,9 @@ public class UsuarioController {
     @ApiResponse(responseCode = "401", description = "Token inválido")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> atualizarDadosUsuario(@PathVariable Long id,
-                                                            @RequestBody UsuarioDTO usuarioDto,
-                                                            @RequestHeader("Authorization") String token){
+    public ResponseEntity<UsuarioDTOResponse> atualizarDadosUsuario(@PathVariable Long id,
+                                                                    @RequestBody UsuarioDTORequest usuarioDto,
+                                                                    @RequestHeader(name= "Authorization", required = false) String token){
         return ResponseEntity.ok(usuarioService.atualizarDadosUsuario(usuarioDto, id, token));
     }
 
@@ -83,9 +81,9 @@ public class UsuarioController {
     @ApiResponse(responseCode = "401", description = "Token inválido")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @PutMapping("/enderecos/{id}")
-    public ResponseEntity<EnderecoDTO> atualizarDadosEndereco(@PathVariable Long id,
-                                                              @RequestBody EnderecoDTO enderecoDTO,
-                                                              @RequestHeader("Authorization") String token){
+    public ResponseEntity<EnderecoDTOResponse> atualizarDadosEndereco(@PathVariable Long id,
+                                                                      @RequestBody EnderecoDTORequest enderecoDTO,
+                                                                      @RequestHeader(name= "Authorization", required = false) String token){
         return ResponseEntity.ok(usuarioService.atualizarDadosEndereco(id, enderecoDTO, token));
     }
 
@@ -95,9 +93,9 @@ public class UsuarioController {
     @ApiResponse(responseCode = "401", description = "Token inválido")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @PutMapping("/telefones/{id}")
-    public ResponseEntity<TelefoneDTO> atualizarDadosTelefone(@PathVariable Long id,
-                                                              @RequestBody TelefoneDTO telefoneDTO,
-                                                              @RequestHeader("Authorization") String token){
+    public ResponseEntity<TelefoneDTOResponse> atualizarDadosTelefone(@PathVariable Long id,
+                                                                      @RequestBody TelefoneDTORequest telefoneDTO,
+                                                                      @RequestHeader(name= "Authorization", required = false) String token){
         return ResponseEntity.ok(usuarioService.atualizarDadosTelefone(id, telefoneDTO, token));
     }
 
@@ -106,8 +104,8 @@ public class UsuarioController {
     @ApiResponse(responseCode = "401", description = "Token inválido")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @PostMapping("/enderecos")
-    public ResponseEntity<EnderecoDTO> cadastrarEndereco(
-            @RequestBody EnderecoDTO enderecoDTO, @RequestHeader("Authorization") String token){
+    public ResponseEntity<EnderecoDTOResponse> cadastrarEndereco(
+            @RequestBody EnderecoDTORequest enderecoDTO, @RequestHeader(name= "Authorization", required = false) String token){
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.cadastrarEndereco(enderecoDTO, token));
     }
 
@@ -116,17 +114,17 @@ public class UsuarioController {
     @ApiResponse(responseCode = "401", description = "Token inválido")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @PostMapping("/telefones")
-    public ResponseEntity<TelefoneDTO> cadastrarTelefone(
-            @RequestBody TelefoneDTO telefoneDTO, @RequestHeader("Authorization") String token){
+    public ResponseEntity<TelefoneDTOResponse> cadastrarTelefone(
+            @RequestBody TelefoneDTORequest telefoneDTO, @RequestHeader(name= "Authorization", required = false) String token){
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.cadastrarTelefone(telefoneDTO, token));
     }
 
     @Operation(summary = "Login Usuários", description = "Realiza o login do usuário")
     @ApiResponse(responseCode = "200", description = "Usuário logado com sucesso")
     @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
-    @ApiResponse(responseCode = "500", description = "Erro de servidor")
+    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<String> login(@RequestBody LoginDTORequest loginDTO){
         return ResponseEntity.ok(usuarioService.login(loginDTO));
     }
 
