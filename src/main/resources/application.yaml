@@ -1,3 +1,11 @@
 spring:
   application:
     name: bff-agendador-tarefas
+
+  client:
+    url:
+      usuario: http://localhost:8080
+      tarefa: http://localhost:8081
+      notificacao: http://localhost:8082
+server:
+  port: 8083
