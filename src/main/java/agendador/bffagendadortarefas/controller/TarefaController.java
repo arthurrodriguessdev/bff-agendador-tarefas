@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RestController("/tarefas")
+@RestController
 @RequiredArgsConstructor
 @Tag(name = "Tarefa", description = "Cadastro de tarefas do usuário")
 @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)
