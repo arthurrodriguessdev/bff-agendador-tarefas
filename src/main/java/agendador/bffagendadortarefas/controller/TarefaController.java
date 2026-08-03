@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/tarefas")
 @Tag(name = "Tarefa", description = "Cadastro de tarefas do usuário")
 @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)
 public class TarefaController {

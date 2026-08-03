@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class TarefaDTORequest {
     private String nomeTarefa;
     private String descricaoTarefa;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss") // Permite enviar como string e converte
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime dataEvento;
     private String emailUsuario;
 }
