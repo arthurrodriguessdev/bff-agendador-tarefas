@@ -36,6 +36,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Usuário encontrado")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    @ApiResponse(responseCode = "401", description = "Token inválido")
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTOResponse> buscarUsuario(@Parameter(description = "ID do usuário", required = true, example = "1")
                                                         @PathVariable Long id,
@@ -48,6 +49,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Usuário encontrado")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    @ApiResponse(responseCode = "401", description = "Token inválido")
     @GetMapping
     public ResponseEntity<UsuarioDTOResponse> buscarUsuarioPorEmail(@RequestParam("email") String email,
                                                                     @RequestHeader(name= "Authorization", required = false) String token){
@@ -130,10 +132,4 @@ public class UsuarioController {
     public ResponseEntity<String> login(@RequestBody LoginDTORequest loginDTO){
         return ResponseEntity.ok(usuarioService.login(loginDTO));
     }
-
-    // Refact
-//    @GetMapping("/token/validade")
-//    public ResponseEntity<Boolean> verificarValidadeToken(@RequestParam("token") String token){
-//        return ResponseEntity.ok(usuarioService.verificarValidadeToken(token));
-//    }
 }

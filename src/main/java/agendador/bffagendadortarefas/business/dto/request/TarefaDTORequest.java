@@ -1,6 +1,5 @@
 package agendador.bffagendadortarefas.business.dto.request;
 
-import agendador.bffagendadortarefas.infraestructure.enums.StatusNotificacaoEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 

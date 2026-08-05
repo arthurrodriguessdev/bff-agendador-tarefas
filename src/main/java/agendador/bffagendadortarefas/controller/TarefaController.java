@@ -59,6 +59,7 @@ public class TarefaController {
     @Operation(summary = "Deleta Tarefas Por ID", description = "Delete tarefa cadastrada por ID")
     @ApiResponse(responseCode = "200", description = "Tarefa deletada com sucesso")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    @ApiResponse(responseCode = "404", description = "Tarefa não encontrada")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarTarefa(@PathVariable Long id,
                                               @RequestHeader(name = "Authorization", required = false) String token){
@@ -69,6 +70,7 @@ public class TarefaController {
     @Operation(summary = "Altera Dados De Tarefa", description = "Altera dados de tarefas cadastradas")
     @ApiResponse(responseCode = "200", description = "Tarefa alterada com sucesso")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    @ApiResponse(responseCode = "404", description = "Tarefa não encontrada")
     @PutMapping("/{id}")
     public ResponseEntity<TarefaDTOResponse> atualizarDadosTarefa(@RequestBody TarefaDTORequest tarefaDTO,
                                                                   @PathVariable Long id,
@@ -79,6 +81,7 @@ public class TarefaController {
     @Operation(summary = "Altera Status Da Tarefa", description = "Altera o status da tarefa")
     @ApiResponse(responseCode = "200", description = "Status da tarefa alterado com sucesso")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    @ApiResponse(responseCode = "404", description = "Tarefa não encontrada")
     @PatchMapping("/{id}")
     public ResponseEntity<TarefaDTOResponse> atualizarStatusTarefa(@RequestParam("status") StatusNotificacaoEnum status,
                                                                    @PathVariable Long id,
