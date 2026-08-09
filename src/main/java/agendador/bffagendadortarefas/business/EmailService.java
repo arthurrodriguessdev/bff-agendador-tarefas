@@ -1,6 +1,7 @@
 package agendador.bffagendadortarefas.business;
 
 import agendador.bffagendadortarefas.business.dto.request.LoginDTORequest;
+import agendador.bffagendadortarefas.business.dto.request.UsuarioDTORequest;
 import agendador.bffagendadortarefas.business.dto.response.TarefaDTOResponse;
 import agendador.bffagendadortarefas.infraestructure.client.NotificacaoClient;
 import agendador.bffagendadortarefas.infraestructure.client.TarefaClient;
@@ -28,13 +29,22 @@ public class EmailService {
     private String emailAdmin;
     @Value("${admin.senha}")
     private String senhaAdmin;
+    @Value("${admin.nome}")
+    private String nomeAdmin;
 
     @Scheduled(cron = "${cron.notificacao}")
     public void enviarEmail(){
-        String token = usuarioClient.login(new LoginDTORequest(emailAdmin, senhaAdmin));
-        String tokenFormatado = formatarToken(token);
+        String token = null;
+        try {
+            token = usuarioClient.login(new LoginDTORequest(emailAdmin, senhaAdmin));
+        } catch(Exception e){
+            criarUsuarioAdmin(nomeAdmin, emailAdmin, senhaAdmin);
+            token = usuarioClient.login(new LoginDTORequest(emailAdmin, senhaAdmin));
+        }
 
-        List<TarefaDTOResponse> tarefasNotificar = getTarefasNotificar(formatarToken(tokenFormatado));
+        String tokenFormatado = formatarToken(token);
+        List<TarefaDTOResponse> tarefasNotificar = getTarefasNotificar(tokenFormatado);
+
         tarefasNotificar.forEach(tarefa->{
             tarefaClient.atualizarStatusTarefa(StatusNotificacaoEnum.NOTIFICADO, tarefa.getId(), tokenFormatado);
             notificacaoClient.enviarEmail(tarefaMapper.toTarefaDTORequest(tarefa));
@@ -64,5 +74,9 @@ public class EmailService {
         }
 
         return "Bearer " + tokenFormatar;
+    }
+
+    public void criarUsuarioAdmin(String nome, String email, String senha){
+        usuarioClient.salvarUsuario(new UsuarioDTORequest(nome, email, senha, null, null));
     }
 }

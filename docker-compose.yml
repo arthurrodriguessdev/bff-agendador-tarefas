@@ -1,0 +1,70 @@
+services:
+
+  agendador-tarefas:
+    build: ../agendador-tarefas
+    container_name: agendador-tarefas
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/db_agendador
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - USUARIO_URL=http://usuario:8080
+      - TZ=America/Sao_Paulo
+    depends_on:
+      - postgres
+      - usuario
+
+  bff-agendador-tarefas:
+    build: .
+    container_name: bff-agendador-tarefas
+    ports:
+      - "8083:8083"
+    environment:
+      - CLIENT_URL_USUARIO=http://usuario:8080
+      - CLIENT_URL_TAREFA=http://agendador-tarefas:8081
+      - CLIENT_URL_NOTIFICACAO=http://notificacao:8082
+      - TZ=America/Sao_Paulo
+    depends_on:
+      - usuario
+      - agendador-tarefas
+      - notificacao
+
+  usuario:
+    build: ../usuario
+    container_name: usuario
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/db_usuario
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - TZ=America/Sao_Paulo
+    depends_on:
+      - postgres
+
+  notificacao:
+    image: arthurrodriguesr/notificacao:latest
+    container_name: notificacao
+    ports:
+      - "8082:8082"
+    environment:
+      - TZ=America/Sao_Paulo
+    depends_on:
+      - usuario
+      - agendador-tarefas
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+
+networks:
+  default:
+    driver: bridge
