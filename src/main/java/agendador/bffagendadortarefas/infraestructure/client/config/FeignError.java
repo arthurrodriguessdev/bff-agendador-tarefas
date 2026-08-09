@@ -23,15 +23,15 @@ public class FeignError implements ErrorDecoder {
                 );
 
                 return switch(response.status()) {
+                    case 400 -> new IllegalArgumentException(globalErrorMessage.getMessage());
+                    case 401 -> new UnauthorizedException(globalErrorMessage.getMessage());
                     case 404 -> new ResourceNotFound(globalErrorMessage.getMessage());
                     case 409 -> new ConflictException(globalErrorMessage.getMessage());
-                    case 401 -> new UnauthorizedException(globalErrorMessage.getMessage());
                     default -> new RuntimeException(globalErrorMessage.getMessage());
                 };
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch(IOException e) {
             throw new RuntimeException("Erro ao ler JSON do microsserviço.");
         }
 

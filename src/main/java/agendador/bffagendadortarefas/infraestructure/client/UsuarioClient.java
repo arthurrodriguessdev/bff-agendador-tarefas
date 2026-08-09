@@ -7,6 +7,7 @@ import agendador.bffagendadortarefas.business.dto.request.UsuarioDTORequest;
 import agendador.bffagendadortarefas.business.dto.response.EnderecoDTOResponse;
 import agendador.bffagendadortarefas.business.dto.response.TelefoneDTOResponse;
 import agendador.bffagendadortarefas.business.dto.response.UsuarioDTOResponse;
+import agendador.bffagendadortarefas.business.dto.response.ViaCepDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,4 +52,7 @@ public interface UsuarioClient {
 
     @PostMapping("/usuarios/login")
     String login(@RequestBody LoginDTORequest loginDTO);
+
+    @GetMapping("/usuarios/enderecos/cep")
+    ViaCepDTO buscarDadosCep(@RequestParam String cep);
 }

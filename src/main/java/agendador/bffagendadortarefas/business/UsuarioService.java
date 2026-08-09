@@ -7,6 +7,7 @@ import agendador.bffagendadortarefas.business.dto.request.UsuarioDTORequest;
 import agendador.bffagendadortarefas.business.dto.response.EnderecoDTOResponse;
 import agendador.bffagendadortarefas.business.dto.response.TelefoneDTOResponse;
 import agendador.bffagendadortarefas.business.dto.response.UsuarioDTOResponse;
+import agendador.bffagendadortarefas.business.dto.response.ViaCepDTO;
 import agendador.bffagendadortarefas.infraestructure.client.UsuarioClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,6 @@ public class UsuarioService {
     public UsuarioDTOResponse salvarUsuario(UsuarioDTORequest usuarioDTO){
         return usuarioClient.salvarUsuario(usuarioDTO);
     }
-
-    // Refact
-//    public boolean verificarValidadeToken(String token){
-//        return jwtUtil.isTokenExpired(token);
-//    }
 
     public UsuarioDTOResponse buscarUsuario(Long id, String token){
         return usuarioClient.buscarUsuario(id, token);
@@ -59,5 +55,9 @@ public class UsuarioService {
 
     public String login(LoginDTORequest loginDTO){
         return usuarioClient.login(loginDTO);
+    }
+
+    public ViaCepDTO buscarDadosCep(String cep){
+        return usuarioClient.buscarDadosCep(cep);
     }
 }

@@ -132,4 +132,13 @@ public class UsuarioController {
     public ResponseEntity<String> login(@RequestBody LoginDTORequest loginDTO){
         return ResponseEntity.ok(usuarioService.login(loginDTO));
     }
+
+    @Operation(summary = "Buscar CEP", description = "Busca dados do CEP informado")
+    @ApiResponse(responseCode = "200", description = "Dados do CEP encontrado com sucesso")
+    @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    @GetMapping("/enderecos/cep")
+    public ResponseEntity<ViaCepDTO> buscarDadosCep(@RequestParam String cep){
+        return ResponseEntity.ok(usuarioService.buscarDadosCep(cep));
+    }
 }

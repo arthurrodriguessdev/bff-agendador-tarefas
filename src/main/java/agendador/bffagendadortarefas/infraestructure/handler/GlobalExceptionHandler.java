@@ -27,4 +27,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new GlobalErrorMessage(Integer.toString(HttpStatus.UNAUTHORIZED.value()), ex.getMessage()));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<GlobalErrorMessage> IllegalArgumentExceptionHandler(IllegalArgumentException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new GlobalErrorMessage(Integer.toString(HttpStatus.BAD_REQUEST.value()), ex.getMessage()));
+    }
 }
