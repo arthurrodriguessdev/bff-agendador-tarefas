@@ -9,6 +9,7 @@ import agendador.bffagendadortarefas.infraestructure.client.UsuarioClient;
 import agendador.bffagendadortarefas.infraestructure.enums.StatusNotificacaoEnum;
 import agendador.bffagendadortarefas.infraestructure.mapper.TarefaMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmailService {
     private final TarefaClient tarefaClient;
     private final NotificacaoClient notificacaoClient;
@@ -45,9 +47,11 @@ public class EmailService {
         String tokenFormatado = formatarToken(token);
         List<TarefaDTOResponse> tarefasNotificar = getTarefasNotificar(tokenFormatado);
 
+        log.info("Quantidade de tarefas a notificar: {}", tarefasNotificar.size());
         tarefasNotificar.forEach(tarefa->{
             tarefaClient.atualizarStatusTarefa(StatusNotificacaoEnum.NOTIFICADO, tarefa.getId(), tokenFormatado);
             notificacaoClient.enviarEmail(tarefaMapper.toTarefaDTORequest(tarefa));
+            log.info("Notificação da tarefa {} enviada com sucesso", tarefa.getId());
         });
     }
 

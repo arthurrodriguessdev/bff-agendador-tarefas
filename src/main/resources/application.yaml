@@ -7,10 +7,10 @@ spring:
       tarefa: ${CLIENT_URL_TAREFA:http://localhost:8081}
       notificacao: ${CLIENT_URL_NOTIFICACAO:http://localhost:8082}
 server:
-  port: 8083
+  port: ${PORTA_BFF}
 admin:
-  email: admin@gmail.com
-  senha: adminapp1234
-  nome: admin
+  email: ${EMAIL_ADMIN}
+  senha: ${SENHA_ADMIN}
+  nome: ${NOME_ADMIN}
 cron:
   notificacao: "*/10 * * * * *"

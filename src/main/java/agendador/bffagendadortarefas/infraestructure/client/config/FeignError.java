@@ -7,9 +7,11 @@ import agendador.bffagendadortarefas.infraestructure.handler.GlobalErrorMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
+@Slf4j
 public class FeignError implements ErrorDecoder {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -32,6 +34,7 @@ public class FeignError implements ErrorDecoder {
             }
 
         } catch(IOException e) {
+            log.error(e.getMessage());
             throw new RuntimeException("Erro ao ler JSON do microsserviço.");
         }
 
