@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ConflictException.class)
-    private ResponseEntity<GlobalErrorMessage> ConflictExceptionHandler(ConflictException ex){
+    private ResponseEntity<GlobalErrorMessage> conflictExceptionHandler(ConflictException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new GlobalErrorMessage(Integer.toString(HttpStatus.CONFLICT.value()), ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFound.class)
-    private ResponseEntity<GlobalErrorMessage> ResourceNotFoundHandler(ResourceNotFound ex){
+    private ResponseEntity<GlobalErrorMessage> resourceNotFoundHandler(ResourceNotFound ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new GlobalErrorMessage(Integer.toString(HttpStatus.NOT_FOUND.value()), ex.getMessage()));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    private ResponseEntity<GlobalErrorMessage> UnauthorizedExceptionHandler(UnauthorizedException ex){
+    private ResponseEntity<GlobalErrorMessage> unauthorizedExceptionHandler(UnauthorizedException ex){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new GlobalErrorMessage(Integer.toString(HttpStatus.UNAUTHORIZED.value()), ex.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    private ResponseEntity<GlobalErrorMessage> IllegalArgumentExceptionHandler(IllegalArgumentException ex){
+    private ResponseEntity<GlobalErrorMessage> illegalArgumentExceptionHandler(IllegalArgumentException ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new GlobalErrorMessage(Integer.toString(HttpStatus.BAD_REQUEST.value()), ex.getMessage()));
     }

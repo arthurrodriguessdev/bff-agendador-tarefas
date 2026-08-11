@@ -1,6 +1,7 @@
 package agendador.bffagendadortarefas.infraestructure.client.config;
 
 import agendador.bffagendadortarefas.exception.ConflictException;
+import agendador.bffagendadortarefas.exception.ErroInternoException;
 import agendador.bffagendadortarefas.exception.ResourceNotFound;
 import agendador.bffagendadortarefas.exception.UnauthorizedException;
 import agendador.bffagendadortarefas.infraestructure.handler.GlobalErrorMessage;
@@ -35,9 +36,9 @@ public class FeignError implements ErrorDecoder {
 
         } catch(IOException e) {
             log.error(e.getMessage());
-            throw new RuntimeException("Erro ao ler JSON do microsserviço.");
+            throw new ErroInternoException("Erro ao ler JSON do microsserviço.");
         }
 
-        return new RuntimeException("Erro interno desconhecido.");
+        return new ErroInternoException("Erro interno desconhecido.");
     }
 }
