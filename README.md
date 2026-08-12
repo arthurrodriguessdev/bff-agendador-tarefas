@@ -17,19 +17,6 @@ O sistema é composto pelos seguintes sistemas:
 ### Fluxo da aplicação
 ![Arquitetura do Sistema](docs/arquitetura.jpg)
 
-
-## Arquitetura
-O sistema é composto pelos seguintes sistemas:
-
-- BFF Agendador de Tarefas - ponto de entrada da aplicação e o responsável por fazer a interface com o cliente e a comunicação entre os microsserviços.
-- Usuário - gerenciamento e autenticação de usuários.
-- Agendador - gerenciamento de tarefas.
-- Notificador - processamento e envio de notificações via e-mail.
-
-### Fluxo da aplicação
-![Arquitetura do Sistema](docs/arquitetura.jpg)
-O cliente realiza as requisições através do BFF. A partir da requisição recebida, o BFF utiliza sua camada service e client para realizar a comunicação com o microsserviço responsável pela operação solicitada.
-
 ## Usuario
 Microsserviço responsável pelo gerenciamento dos usuários, contando com um **CRUD** completo, endpoints de autenticação e outras funcionalidades relacionadas ao usuário.
 
