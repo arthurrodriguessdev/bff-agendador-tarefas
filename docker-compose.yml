@@ -1,7 +1,7 @@
 services:
 
   agendador-tarefas:
-    build: ../agendador-tarefas
+    image: arthurrodriguesr/agendador-tarefas:latest
     container_name: agendador-tarefas
     ports:
       - "${PORTA_AGENDADOR}:${PORTA_AGENDADOR}"
@@ -11,6 +11,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD_AGENDADOR=${SPRING_DATASOURCE_PASSWORD_AGENDADOR}
       - PORTA_AGENDADOR=${PORTA_AGENDADOR}
       - USUARIO_URL=http://usuario:8080
+      - SECRET_KEY_JWT=${SECRET_KEY_JWT}
       - TZ=America/Sao_Paulo
     depends_on:
       - postgres
@@ -36,7 +37,7 @@ services:
       - notificacao
 
   usuario:
-    build: ../usuario
+    image: arthurrodriguesr/usuario:latest
     container_name: usuario
     ports:
       - "${PORTA_USUARIO}:${PORTA_USUARIO}"
@@ -45,6 +46,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME_USUARIO}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD_USUARIO}
       - PORTA_USUARIO=${PORTA_USUARIO}
+      - SECRET_KEY_JWT=${SECRET_KEY_JWT}
       - TZ=America/Sao_Paulo
       - URL_API_VIACEP=${URL_API_VIACEP}
     depends_on:
