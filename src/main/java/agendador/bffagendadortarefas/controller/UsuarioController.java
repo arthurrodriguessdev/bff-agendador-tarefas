@@ -38,10 +38,12 @@ public class UsuarioController {
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @ApiResponse(responseCode = "401", description = "Token inválido")
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTOResponse> buscarUsuario(@Parameter(description = "ID do usuário", required = true, example = "1")
-                                                        @PathVariable Long id,
-                                                            @Parameter(description = "Token de acesso", required = false, example = "Bearer H83798402803...")
-                                                        @RequestHeader(name= "Authorization", required = false) String token){
+    public ResponseEntity<UsuarioDTOResponse> buscarUsuario(
+            @Parameter(description = "ID do usuário", required = true, example = "1")
+            @PathVariable Long id,
+
+            @Parameter(description = "Token de acesso", required = false, example = "Bearer H83798402803...")
+            @RequestHeader(name= "Authorization", required = false) String token){
         return ResponseEntity.ok(usuarioService.buscarUsuario(id, token));
     }
 

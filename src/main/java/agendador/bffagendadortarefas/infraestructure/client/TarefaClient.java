@@ -37,4 +37,7 @@ public interface TarefaClient {
     TarefaDTOResponse atualizarStatusTarefa(@RequestParam("status") StatusNotificacaoEnum status,
                                             @PathVariable Long id,
                                             @RequestHeader("Authorization") String token);
+
+    @PostMapping("/proximas/notificar")
+    void notificarProximasTarefas(@RequestHeader("Authorization") String token);
 }

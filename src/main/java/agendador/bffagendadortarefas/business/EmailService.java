@@ -2,30 +2,20 @@ package agendador.bffagendadortarefas.business;
 
 import agendador.bffagendadortarefas.business.dto.request.LoginDTORequest;
 import agendador.bffagendadortarefas.business.dto.request.UsuarioDTORequest;
-import agendador.bffagendadortarefas.business.dto.response.TarefaDTOResponse;
-import agendador.bffagendadortarefas.infraestructure.client.NotificacaoClient;
 import agendador.bffagendadortarefas.infraestructure.client.TarefaClient;
 import agendador.bffagendadortarefas.infraestructure.client.UsuarioClient;
-import agendador.bffagendadortarefas.infraestructure.enums.StatusNotificacaoEnum;
-import agendador.bffagendadortarefas.infraestructure.mapper.TarefaMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class EmailService {
     private final TarefaClient tarefaClient;
-    private final NotificacaoClient notificacaoClient;
     private final UsuarioClient usuarioClient;
-    private final TarefaMapper tarefaMapper;
 
     @Value("${admin.email}")
     private String emailAdmin;
@@ -34,53 +24,34 @@ public class EmailService {
     @Value("${admin.nome}")
     private String nomeAdmin;
 
-    @Scheduled(cron = "${cron.notificacao}")
-    public void enviarEmail(){
+//    @Scheduled(cron = "${cron.notificacao}")
+    @Scheduled(fixedDelay = 1000)
+    public void enviarEmail() {
         String token = null;
+
+        // Autentica com as credenciais admin para enviar a requisição
         try {
             token = usuarioClient.login(new LoginDTORequest(emailAdmin, senhaAdmin));
-        } catch(Exception e){
-            criarUsuarioAdmin(nomeAdmin, emailAdmin, senhaAdmin);
+        } catch (Exception e) {
+            usuarioClient.salvarUsuario(new UsuarioDTORequest(
+                    nomeAdmin,
+                    emailAdmin,
+                    senhaAdmin,
+                    null,
+                    null)
+            );
+
             token = usuarioClient.login(new LoginDTORequest(emailAdmin, senhaAdmin));
         }
 
-        String tokenFormatado = formatarToken(token);
-        List<TarefaDTOResponse> tarefasNotificar = getTarefasNotificar(tokenFormatado);
-
-        log.info("Quantidade de tarefas a notificar: {}", tarefasNotificar.size());
-        tarefasNotificar.forEach(tarefa->{
-            tarefaClient.atualizarStatusTarefa(StatusNotificacaoEnum.NOTIFICADO, tarefa.getId(), tokenFormatado);
-            notificacaoClient.enviarEmail(tarefaMapper.toTarefaDTORequest(tarefa));
-            log.info("Notificação da tarefa {} enviada com sucesso", tarefa.getId());
-        });
+        tarefaClient.notificarProximasTarefas(formatarToken(token));
     }
 
-    public List<TarefaDTOResponse> getTarefasNotificar(String token){
-        LocalDateTime horaAtual = LocalDateTime.now();
-        LocalDateTime horaAtualMaisUma = horaAtual.plusHours(1);
-        List<TarefaDTOResponse> tarefasPeriodo = tarefaClient.buscarTarefasPorIntervaloDatas(
-                token, horaAtual, horaAtualMaisUma);
-
-        // Filtrando somente as com status de pendência
-        List<TarefaDTOResponse> tarefasNotificar = new ArrayList<>();
-        tarefasPeriodo.forEach(tarefa->{
-            if(tarefa.getStatus() == StatusNotificacaoEnum.PENDENTE){
-                tarefasNotificar.add(tarefa);
-            }
-        });
-
-        return tarefasNotificar;
-    }
-
-    public String formatarToken(String tokenFormatar){
+    private String formatarToken(String tokenFormatar){
         if(tokenFormatar.startsWith("Bearer ")){
             return tokenFormatar;
         }
 
         return "Bearer " + tokenFormatar;
-    }
-
-    public void criarUsuarioAdmin(String nome, String email, String senha){
-        usuarioClient.salvarUsuario(new UsuarioDTORequest(nome, email, senha, null, null));
     }
 }

@@ -30,8 +30,9 @@ public class TarefaController {
     @ApiResponse(responseCode = "200", description = "Tarefa salva com sucesso")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @PostMapping
-    public ResponseEntity<TarefaDTOResponse> adicionarTarefa(@RequestBody TarefaDTORequest tarefaDTO,
-                                                             @RequestHeader(name = "Authorization", required = false) String token){
+    public ResponseEntity<TarefaDTOResponse> adicionarTarefa(
+            @RequestBody TarefaDTORequest tarefaDTO,
+            @RequestHeader(name = "Authorization", required = false) String token){
         return ResponseEntity.ok(tarefaService.adicionarTarefa(tarefaDTO, token));
     }
 
@@ -40,7 +41,8 @@ public class TarefaController {
     @ApiResponse(responseCode = "200", description = "Tarefas encontradas com sucesso")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @GetMapping
-    public ResponseEntity<List<TarefaDTOResponse>> buscarTarefasPorEmail(@RequestHeader(name = "Authorization", required = false) String token){
+    public ResponseEntity<List<TarefaDTOResponse>> buscarTarefasPorEmail(
+            @RequestHeader(name = "Authorization", required = false) String token){
         return ResponseEntity.ok(tarefaService.buscarTarefasPorEmail(token));
     }
 
@@ -72,9 +74,10 @@ public class TarefaController {
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @ApiResponse(responseCode = "404", description = "Tarefa não encontrada")
     @PutMapping("/{id}")
-    public ResponseEntity<TarefaDTOResponse> atualizarDadosTarefa(@RequestBody TarefaDTORequest tarefaDTO,
-                                                                  @PathVariable Long id,
-                                                                  @RequestHeader(name = "Authorization", required = false) String token){
+    public ResponseEntity<TarefaDTOResponse> atualizarDadosTarefa(
+            @RequestBody TarefaDTORequest tarefaDTO,
+            @PathVariable Long id,
+            @RequestHeader(name = "Authorization", required = false) String token){
         return ResponseEntity.ok(tarefaService.atualizarDadosTarefa(tarefaDTO, id, token));
     }
 
@@ -83,9 +86,10 @@ public class TarefaController {
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @ApiResponse(responseCode = "404", description = "Tarefa não encontrada")
     @PatchMapping("/{id}")
-    public ResponseEntity<TarefaDTOResponse> atualizarStatusTarefa(@RequestParam("status") StatusNotificacaoEnum status,
-                                                                   @PathVariable Long id,
-                                                                   @RequestHeader(name = "Authorization", required = false) String token){
+    public ResponseEntity<TarefaDTOResponse> atualizarStatusTarefa(
+            @RequestParam("status") StatusNotificacaoEnum status,
+            @PathVariable Long id,
+            @RequestHeader(name = "Authorization", required = false) String token){
         return ResponseEntity.ok(tarefaService.atualizarStatusTarefa(status, id, token));
     }
 }
