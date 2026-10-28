@@ -1,15 +1,11 @@
 package agendador.bffagendadortarefas.infraestructure.handler;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class GlobalErrorMessage {
-    private String status;
-    private String message;
-}
+@Schema(name = "Erro", description = "Formato padrão das respostas de erro da API.")
+public record GlobalErrorMessage(
+        @Schema(description = "Código HTTP da resposta", example = "404")
+        String status,
+        @Schema(description = "Descrição do erro", example = "Recurso não encontrado.")
+        String message
+) {}

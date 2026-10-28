@@ -1,16 +1,9 @@
 package agendador.bffagendadortarefas.business.dto.response;
 
-import lombok.*;
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class EnderecoDTOResponse {
-    private Long id;
-    private String rua;
-    private String bairro;
-    private String cep;
-    private String cidade;
-}
+public record EnderecoDTOResponse(
+        Long id,
+        String rua,
+        String bairro,
+        String cep,
+        String cidade
+){}

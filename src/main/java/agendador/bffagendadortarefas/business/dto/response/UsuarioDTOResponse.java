@@ -1,17 +1,14 @@
 package agendador.bffagendadortarefas.business.dto.response;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class UsuarioDTOResponse {
-    private String nome;
-    private String email;
-    private String senha;
-    private List<EnderecoDTOResponse> enderecos;
-    private List<TelefoneDTOResponse> telefones;
-}
+public record UsuarioDTOResponse(
+        String nome,
+        String email,
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+        String senha,
+        List<EnderecoDTOResponse> enderecos,
+        List<TelefoneDTOResponse> telefones
+){}

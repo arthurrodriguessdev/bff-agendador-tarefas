@@ -1,15 +1,8 @@
 package agendador.bffagendadortarefas.business.dto.request;
 
-import lombok.*;
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class EnderecoDTORequest {
-    private String rua;
-    private String bairro;
-    private String cep;
-    private String cidade;
-}
+public record EnderecoDTORequest(
+        String rua,
+        String bairro,
+        String cep,
+        String cidade
+){}
