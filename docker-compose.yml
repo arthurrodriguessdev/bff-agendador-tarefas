@@ -1,6 +1,7 @@
 services:
   agendador-tarefas:
-    image: arthurrodriguesr/agendador-tarefas:latest
+#    image: arthurrodriguesr/agendador-tarefas:latest
+    build: "../agendador-tarefas"
     container_name: agendador-tarefas
     ports:
       - "${PORTA_AGENDADOR}:${PORTA_AGENDADOR}"
@@ -32,7 +33,8 @@ services:
       - notificacao
 
   usuario:
-    image: arthurrodriguesr/usuario:latest
+#    image: arthurrodriguesr/usuario:latest
+    build: "../usuario"
     container_name: usuario
     ports:
       - "${PORTA_USUARIO}:${PORTA_USUARIO}"
@@ -44,7 +46,8 @@ services:
       - postgres
 
   notificacao:
-    image: arthurrodriguesr/notificacao:latest
+    build: "../notificacao"
+#    image: arthurrodriguesr/notificacao:latest
     container_name: notificacao
     ports:
       - "${PORTA_NOTIFICACAO}:${PORTA_NOTIFICACAO}"
@@ -69,6 +72,7 @@ services:
   kafka:
     image: apache/kafka:latest
     container_name: shop-kafka
+    hostname: kafka
     ports:
       - "9092:9092"
     environment:

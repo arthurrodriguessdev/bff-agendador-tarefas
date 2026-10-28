@@ -131,7 +131,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTORequest loginDTO){
+    public ResponseEntity<TokenDTO> login(@RequestBody LoginDTORequest loginDTO){
         return ResponseEntity.ok(usuarioService.login(loginDTO));
     }
 
