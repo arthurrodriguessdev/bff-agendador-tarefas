@@ -1,56 +1,52 @@
+# BFF — Agendador de Tarefas
 
-# BFF - Agendador de Tarefas
-BFF é uma sigla para Backend For Frontend, o responsável por centralizar o acesso ao sistema de gerenciamento de tarefas, usuários e notificações.
-
-O projeto utiliza uma arquitetura baseada em microsserviços, onde cada serviço possui uma responsabilidade única. O BFF atua como o ponto de entrada da aplicação, recebendo requisições do cliente e realizando a comunicação com os microsserviços.
-
-
+Backend For Frontend que oferece uma API única para a aplicação cliente e encaminha as operações aos microsserviços de usuários, tarefas e notificações. O BFF concentra os endpoints consumidos pelo cliente, mas delega autenticação, persistência e regras de negócio aos serviços responsáveis.
 
 ## Arquitetura
-O sistema é composto pelos seguintes sistemas:
 
-- **BFF Agendador de Tarefas** - ponto de entrada da aplicação e o responsável por fazer a interface com o cliente e a comunicação entre os microsserviços.
-- **Usuário** - gerenciamento e autenticação de usuários.
-- **Agendador** - gerenciamento de tarefas.
-- **Notificador** - processamento e envio de notificações via e-mail.
+```mermaid
+flowchart LR
+    Cliente[Aplicação cliente]
+    BFF[BFF<br/>Spring Boot]
+    Usuario[Microsserviço de Usuários<br/>Cadastro e autenticação]
+    Agendador[Microsserviço Agendador<br/>Cadastro e consulta de tarefas]
+    Kafka[(Apache Kafka)]
+    Notificador[Microsserviço de Notificações<br/>Envio de e-mails]
+    PostgreSQL[(PostgreSQL)]
 
-### Fluxo da aplicação
-![Arquitetura do Sistema](docs/arquitetura.jpg)
+    Cliente -->|REST / JSON| BFF
+    BFF -->|HTTP via OpenFeign<br/>usuários e JWT| Usuario
+    BFF -->|HTTP via OpenFeign<br/>tarefas e agendamento| Agendador
+    Usuario --> PostgreSQL
+    Agendador --> PostgreSQL
+    Agendador -->|Publica eventos| Kafka
+    Kafka -->|Consome eventos| Notificador
+```
 
-## Usuário
-Microsserviço responsável pelo gerenciamento dos usuários, contando com um **CRUD** completo, endpoints de autenticação e outras funcionalidades relacionadas ao usuário.
+O BFF expõe os recursos de usuários (`/usuarios`) e tarefas (`/tarefas`). As chamadas aos serviços internos são feitas por HTTP com OpenFeign. O serviço de usuários emite os tokens JWT usados nas operações protegidas; o BFF encaminha o cabeçalho `Authorization` ao serviço correspondente.
 
-### Autenticação 
-A autenticação dos usuários é responsabilidade do microsserviço específico de usuário.
+O agendador é responsável pelos dados e pelo ciclo de vida das tarefas. Quando uma tarefa gera uma notificação, o agendador publica um evento no Kafka, e o serviço de notificações consome esse evento para processar o envio do e-mail. A comunicação entre o agendador e o notificador é assíncrona e ocorre pelo Kafka; o BFF não se comunica diretamente com o serviço de notificações.
 
-A autenticação utiliza **JWT (Json Web Token)** para permitir que os endpoints protegidos recebam requisições autenticadas.
+## Serviços
 
-## Agendador
-Microsserviço responsável pelo gerenciamento de tarefas, contando com um **CRUD** completo, e outras funcionalidades relacionadas ao gerenciamento e agendamento de tarefas.
+| Serviço | Responsabilidade |
+|---|---|
+| **BFF Agendador de Tarefas** | API de entrada para o cliente; encaminha requisições e coordena chamadas aos microsserviços. |
+| **Usuário** | Cadastro, consulta e atualização de usuários, endereços e telefones; autenticação e emissão de JWT. |
+| **Agendador** | Cadastro, consulta, atualização e remoção de tarefas, incluindo consultas por período. |
+| **Notificador** | Processamento e envio de notificações por e-mail a partir das tarefas agendadas. |
+| **Kafka** | Recebe os eventos publicados pelo agendador e os disponibiliza ao serviço de notificações. |
+| **PostgreSQL** | Persistência utilizada pelos serviços de usuário e agendamento. |
 
-## Notificador
-Microsserviço responsável por notificar usuários via e-mail quando eles possuem alguma tarefa cadastrada e que está agendada para a próxima hora.
+## Docker Compose
 
-## Tecnologias
-- Java
-- Spring Boot
-- Spring Web
-- Spring Security
-- Spring Data JPA
-- PostgreSQL
-- OpenFeign
-- Docker
-- Gradle
-- SonarQube
+O `docker-compose.yml` orquestra o BFF, os microsserviços, o PostgreSQL e o Kafka em uma rede Docker. Os serviços internos são acessados pelos nomes dos containers e as URLs do BFF são configuradas pelas variáveis `CLIENT_URL_USUARIO`, `CLIENT_URL_TAREFA` e `CLIENT_URL_NOTIFICACAO`.
 
-## Docker
-O docker é utilizado no projeto para facilitar a execução e a padronização do ambiente.
+O Compose usa o `init.sql` para criar os bancos iniciais e expõe as portas configuradas no `.env`. O Kafka está disponível na porta `9092` para comunicação na rede Docker.
 
-O arquivo **docker-compose.yml** é o responsável pela orquestração dos serviços necessários para executar completamente a aplicação.Dentro desse arquivo, foram definidas regras para o download das imagens dos microsserviços e execução das mesmas.
+## Desenvolvimento
 
-## Qualidade
-No quesito qualidade de código, o **SonarQube** foi utilizado como uma ferramenta para analisar e identificar possíveis erros (code smells) e bugs que poderiam atrapalhar a execução da aplicação.
+O projeto utiliza Java 21, Spring Boot, Spring Web, Spring Cloud OpenFeign, Springdoc OpenAPI e Gradle.
 
-## Autor
-
-- [Arthur Rodrigues](https://www.linkedin.com/in/arthur-rodriguesx/)
+## Documentação
+A documentação interativa da API fica disponível em `/swagger-ui/index.html` enquanto a aplicação estiver em execução.
