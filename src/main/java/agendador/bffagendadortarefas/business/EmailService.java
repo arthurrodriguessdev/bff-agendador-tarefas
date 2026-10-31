@@ -2,6 +2,7 @@ package agendador.bffagendadortarefas.business;
 
 import agendador.bffagendadortarefas.business.dto.request.LoginDTORequest;
 import agendador.bffagendadortarefas.business.dto.request.UsuarioDTORequest;
+import agendador.bffagendadortarefas.business.utils.TokenUtil;
 import agendador.bffagendadortarefas.infraestructure.client.TarefaClient;
 import agendador.bffagendadortarefas.infraestructure.client.UsuarioClient;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +45,6 @@ public class EmailService {
             token = usuarioClient.login(new LoginDTORequest(emailAdmin, senhaAdmin));
         }
 
-        tarefaClient.notificarProximasTarefas(formatarToken(token));
-    }
-
-    private String formatarToken(String tokenFormatar){
-        if(tokenFormatar.startsWith("Bearer ")){
-            return tokenFormatar;
-        }
-
-        return "Bearer " + tokenFormatar;
+        tarefaClient.notificarProximasTarefas(TokenUtil.formatarToken(token));
     }
 }
