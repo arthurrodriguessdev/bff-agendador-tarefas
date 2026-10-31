@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/tarefas")
+@RequestMapping("/api/v1/tarefas")
 @Tag(name = "Tarefa", description = "Cadastro de tarefas do usuário")
 @SecurityRequirement(name = SecurityConfig.SECURITY_SCHEME)
 @ApiResponse(

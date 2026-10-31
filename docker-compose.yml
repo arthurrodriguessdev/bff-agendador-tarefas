@@ -22,7 +22,7 @@ services:
       - "${PORTA_BFF}:${PORTA_BFF}"
     environment:
       - CLIENT_URL_USUARIO=http://usuario:${PORTA_USUARIO}
-      - CLIENT_URL_TAREFA=http://agendador-tarefas:${PORTA_AGENDADOR}
+      - CLIENT_URL_TAREFA=http://agendador-tarefas:${PORTA_AGENDADOR}/api/v1
       - CLIENT_URL_NOTIFICACAO=http://notificacao:${PORTA_NOTIFICACAO}
       - TZ=America/Sao_Paulo
     env_file:
