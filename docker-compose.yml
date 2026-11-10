@@ -16,7 +16,8 @@ services:
       - kafka
 
   bff-agendador-tarefas:
-    build: .
+#    build: .
+    image: arthurrodriguesr/bff-agendador-tarefas:latest
     container_name: bff-agendador-tarefas
     ports:
       - "${PORTA_BFF}:${PORTA_BFF}"
