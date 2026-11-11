@@ -11,29 +11,29 @@ import java.util.List;
 
 @FeignClient(name = "tarefa", url = "${spring.client.url.tarefa}")
 public interface TarefaClient {
-    @PostMapping("/tarefas")
+    @PostMapping()
     TarefaDTOResponse adicionarTarefa(@RequestBody TarefaDTORequest tarefaDTO,
                                       @RequestHeader("Authorization") String token);
 
-    @GetMapping("/tarefas")
+    @GetMapping()
     List<TarefaDTOResponse> buscarTarefasPorEmail(@RequestHeader("Authorization") String token);
 
-    @GetMapping("/tarefas/eventos")
+    @GetMapping("/eventos")
     List<TarefaDTOResponse> buscarTarefasPorIntervaloDatas(
             @RequestHeader("Authorization") String token,
             @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
             @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim);
 
-    @DeleteMapping("/tarefas/{id}")
+    @DeleteMapping("/{id}")
     void deletarTarefa(@PathVariable Long id,
                        @RequestHeader("Authorization") String token);
 
-    @PutMapping("/tarefas/{id}")
+    @PutMapping("/{id}")
     TarefaDTOResponse atualizarDadosTarefa(@RequestBody TarefaDTORequest tarefaDTO,
                                            @PathVariable Long id,
                                            @RequestHeader("Authorization") String token);
 
-    @PatchMapping("/tarefas/{id}")
+    @PatchMapping("/{id}")
     TarefaDTOResponse atualizarStatusTarefa(@RequestParam("status") StatusNotificacaoEnum status,
                                             @PathVariable Long id,
                                             @RequestHeader("Authorization") String token);

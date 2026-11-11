@@ -26,7 +26,7 @@ public class EmailService {
     private String nomeAdmin;
 
 //    @Scheduled(cron = "${cron.notificacao}")
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 10000)
     public void enviarEmail() {
         String token = null;
 
